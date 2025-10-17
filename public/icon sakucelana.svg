@@ -1,0 +1,23 @@
+<svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="150" cy="150" r="140" fill="#f4f8ff"></circle>
+
+  <!-- Wallet -->
+  <rect x="70" y="120" width="160" height="100" rx="15" fill="#2d89ef"></rect>
+  <rect x="70" y="110" width="160" height="25" rx="5" fill="#1e5cb3"></rect>
+  <circle cx="210" cy="170" r="8" fill="#fff"></circle>
+
+  <!-- Coins -->
+  <circle cx="110" cy="100" r="18" fill="#f4c542" stroke="#d4a520" stroke-width="3"></circle>
+  <circle cx="135" cy="85" r="18" fill="#f4c542" stroke="#d4a520" stroke-width="3"></circle>
+
+  <!-- Bar Chart -->
+  <rect x="190" y="90" width="10" height="25" fill="#34c759"></rect>
+  <rect x="205" y="75" width="10" height="40" fill="#ff9500"></rect>
+  <rect x="220" y="60" width="10" height="55" fill="#ff3b30"></rect>
+
+  <!-- Text -->
+  <text x="150" y="250" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#333">
+    SakuCelana
+  </text>
+</svg>
