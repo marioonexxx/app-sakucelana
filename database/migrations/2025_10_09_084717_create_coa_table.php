@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('coa', function (Blueprint $table) {
             $table->id();
-            $table->string('kode')->unique(); // kode akun, misal 101, 201
-            $table->string('nama');           // nama akun, misal "Kas", "Pendapatan Penjualan"
-            $table->enum('tipe', ['Aktiva', 'Hutang', 'Modal', 'Pendapatan', 'Beban']); // tipe akun
-            $table->enum('normal', ['Debit', 'Kredit']); // normal balance akun
+            $table->string('kode')->unique();
+            $table->string('nama');
+            $table->enum('tipe', ['Aktiva', 'Hutang', 'Modal', 'Pendapatan', 'Beban']);
+            $table->enum('normal', ['Debit', 'Kredit']);
+            $table->foreignId('lawan_id')->nullable()->constrained('coa')->onDelete('set null');
             $table->timestamps();
         });
     }

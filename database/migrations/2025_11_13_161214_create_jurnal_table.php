@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('biaya_operasional', function (Blueprint $table) {
+        Schema::create('jurnal', function (Blueprint $table) {
             $table->id();
             $table->date('tgl_transaksi');
-            $table->foreignId('coa_id')
-                ->constrained('coa')
-                ->onDelete('cascade');
-            $table->decimal('nilai', 15, 2);
-            $table->string('bukti')->nullable();
+            $table->foreignId('coa_id')->constrained('coa')->onDelete('cascade');
+            $table->decimal('debit', 15, 2)->default(0);
+            $table->decimal('kredit', 15, 2)->default(0);
             $table->text('keterangan')->nullable();
+            $table->foreignId('biaya_operasional_id')->nullable()->constrained('biaya_operasional')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('biaya_operasional');
+        Schema::dropIfExists('jurnal');
     }
 };

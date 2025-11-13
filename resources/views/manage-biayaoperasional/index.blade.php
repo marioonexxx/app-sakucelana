@@ -23,15 +23,13 @@
                 </div>
             </div>
 
-            <!-- Container-fluid starts -->
+            {{-- Card --}}
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-xl-12">
                         <div class="card">
                             <div class="card-header d-flex justify-content-between align-items-start flex-wrap gap-2">
-                                <div>
-                                    <h5>Tabel Biaya Operasional</h5>
-                                </div>
+                                <h5>Tabel Biaya Operasional</h5>
                                 <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
                                     data-bs-target="#createModal">
                                     <i class="fa-solid fa-plus-circle"></i> Add
@@ -45,8 +43,8 @@
                                             <tr>
                                                 <th>#</th>
                                                 <th>Tanggal</th>
-                                                <th>Kode Rekening</th>
-                                                <th>Nama Rekening</th>
+                                                <th>Akun Biaya (Debit)</th>
+                                                <th>Akun Lawan (Kredit)</th>
                                                 <th>Nilai</th>
                                                 <th>Bukti</th>
                                                 <th>Keterangan</th>
@@ -57,10 +55,10 @@
                                             @foreach ($data as $index => $item)
                                                 <tr>
                                                     <td>{{ $index + 1 }}</td>
-                                                    <td>{{ \Carbon\Carbon::parse($item->tgl_transaksi)->format('d/m/Y') }}
-                                                    </td>
-                                                    <td>{{ $item->koderekening->kode ?? '-' }}</td>
-                                                    <td>{{ $item->koderekening->nama_rekening ?? '-' }}</td>
+                                                    <td>{{ \Carbon\Carbon::parse($item->tgl_transaksi)->isoFormat('D MMMM YYYY') }}</td>
+                                                    <td>{{ $item->coa->kode ?? '-' }} - {{ $item->coa->nama ?? '-' }}</td>
+                                                    <td>{{ $item->coa->lawan->kode ?? '-' }} -
+                                                        {{ $item->coa->lawan->nama ?? '-' }}</td>
                                                     <td class="text-end">{{ number_format($item->nilai, 2, ',', '.') }}</td>
                                                     <td class="text-center">
                                                         @if ($item->bukti)
@@ -75,17 +73,13 @@
                                                     <td>{{ $item->keterangan ?? '-' }}</td>
                                                     <td class="text-center">
                                                         <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                                                            data-bs-target="#editModal{{ $item->id }}">
-                                                            Edit
-                                                        </button>
+                                                            data-bs-target="#editModal{{ $item->id }}">Edit</button>
                                                         <button class="btn btn-sm btn-danger" data-bs-toggle="modal"
-                                                            data-bs-target="#deleteModal{{ $item->id }}">
-                                                            Hapus
-                                                        </button>
+                                                            data-bs-target="#deleteModal{{ $item->id }}">Hapus</button>
                                                     </td>
                                                 </tr>
 
-                                                {{-- Modal Edit --}}
+                                                {{-- Edit Modal --}}
                                                 <div class="modal fade" id="editModal{{ $item->id }}" tabindex="-1"
                                                     aria-hidden="true">
                                                     <div class="modal-dialog">
@@ -107,16 +101,15 @@
                                                                             class="form-control" required>
                                                                     </div>
                                                                     <div class="mb-3">
-                                                                        <label>Kode Rekening</label>
-                                                                        <select name="koderekening_id" class="form-select"
-                                                                            required>
-                                                                            <option value="">-- Pilih Rekening --
+                                                                        <label>Akun Biaya (Debit)</label>
+                                                                        <select name="coa_id" class="form-select" required>
+                                                                            <option value="">-- Pilih Akun Biaya --
                                                                             </option>
-                                                                            @foreach ($koderekening as $kr)
-                                                                                <option value="{{ $kr->id }}"
-                                                                                    {{ $kr->id == $item->koderekening_id ? 'selected' : '' }}>
-                                                                                    {{ $kr->kode }} -
-                                                                                    {{ $kr->nama_rekening }}
+                                                                            @foreach ($coas as $coa)
+                                                                                <option value="{{ $coa->id }}"
+                                                                                    {{ $coa->id == $item->coa_id ? 'selected' : '' }}>
+                                                                                    {{ $coa->kode }} -
+                                                                                    {{ $coa->nama }}
                                                                                 </option>
                                                                             @endforeach
                                                                         </select>
@@ -147,7 +140,7 @@
                                                     </div>
                                                 </div>
 
-                                                {{-- Modal Delete --}}
+                                                {{-- Delete Modal --}}
                                                 <div class="modal fade" id="deleteModal{{ $item->id }}" tabindex="-1"
                                                     aria-hidden="true">
                                                     <div class="modal-dialog">
@@ -163,7 +156,7 @@
                                                                 </div>
                                                                 <div class="modal-body">
                                                                     <p>Yakin ingin menghapus data
-                                                                        <strong>{{ $item->koderekening->nama_rekening }}</strong>?
+                                                                        <strong>{{ $item->coa->nama }}</strong>?
                                                                     </p>
                                                                 </div>
                                                                 <div class="modal-footer">
@@ -186,7 +179,7 @@
                 </div>
             </div>
 
-            {{-- MODAL CREATE --}}
+            {{-- Create Modal --}}
             <div class="modal fade" id="createModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
                     <form action="{{ route('biaya-operasional.store') }}" method="POST" enctype="multipart/form-data">
@@ -202,12 +195,12 @@
                                     <input type="date" name="tgl_transaksi" class="form-control" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label>Kode Rekening</label>
-                                    <select name="koderekening_id" class="form-select" required>
-                                        <option value="">-- Pilih Rekening --</option>
-                                        @foreach ($koderekening as $kr)
-                                            <option value="{{ $kr->id }}">{{ $kr->kode }} -
-                                                {{ $kr->nama_rekening }}</option>
+                                    <label>Akun Biaya (Debit)</label>
+                                    <select name="coa_id" class="form-select" required>
+                                        <option value="">-- Pilih Akun Biaya --</option>
+                                        @foreach ($coas as $coa)
+                                            <option value="{{ $coa->id }}">{{ $coa->kode }} -
+                                                {{ $coa->nama }}</option>
                                         @endforeach
                                     </select>
                                 </div>

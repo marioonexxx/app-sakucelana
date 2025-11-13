@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Produk;
 use App\Models\Transaksi;
 use App\Models\TransaksiDetail;
+use App\Models\Coa;
+use App\Models\Jurnal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -13,13 +15,10 @@ class ManageKasirController extends Controller
 {
     public function index()
     {
-
         $produk = Produk::all();
         return view('manage-kasir.index', compact('produk'));
     }
 
-    
-    // Simpan transaksi
     public function store(Request $request)
     {
         $request->validate([
@@ -30,17 +29,17 @@ class ManageKasirController extends Controller
         ]);
 
         DB::transaction(function () use ($request) {
-            // Buat nomor transaksi unik
+
             $nomor_transaksi = 'TRX-' . date('YmdHis') . '-' . Str::random(4);
 
-            // Simpan ke tabel transaksi
+            // Simpan transaksi utama
             $transaksi = Transaksi::create([
                 'nomor_transaksi' => $nomor_transaksi,
                 'tanggal' => now(),
                 'total' => $request->total,
             ]);
 
-            // Simpan detail transaksi
+            // Simpan detail transaksi & update stok
             foreach ($request->produk_id as $index => $produk_id) {
                 TransaksiDetail::create([
                     'transaksi_id' => $transaksi->id,
@@ -50,13 +49,40 @@ class ManageKasirController extends Controller
                     'subtotal' => $request->qty[$index] * $request->harga[$index],
                 ]);
 
-                // Update stok produk
                 $produk = Produk::find($produk_id);
-                $produk->stok = $produk->stok - $request->qty[$index];
+                $produk->stok -= $request->qty[$index];
                 $produk->save();
             }
+
+            // Ambil COA Pendapatan (penjualan) dan lawan_id-nya
+            $coaPendapatan = Coa::where('kode', '411')->firstOrFail(); // Penjualan Vape
+            $coaKas = $coaPendapatan->lawan; // otomatis Kas Toko
+
+            if (!$coaKas) {
+                throw new \Exception("Lawan akun untuk '{$coaPendapatan->nama}' belum diisi di COA.");
+            }
+
+            // Debit Kas Toko
+            Jurnal::create([
+                'tgl_transaksi' => now(),
+                'coa_id' => $coaKas->id,
+                'debit' => $request->total,
+                'kredit' => 0,
+                'keterangan' => 'Penjualan tunai kasir #' . $nomor_transaksi,
+                'biaya_operasional_id' => null,
+            ]);
+
+            // Kredit Pendapatan Penjualan
+            Jurnal::create([
+                'tgl_transaksi' => now(),
+                'coa_id' => $coaPendapatan->id,
+                'debit' => 0,
+                'kredit' => $request->total,
+                'keterangan' => 'Pendapatan penjualan kasir #' . $nomor_transaksi,
+                'biaya_operasional_id' => null,
+            ]);
         });
 
-        return redirect()->back()->with('success', 'Transaksi berhasil disimpan.');
+        return redirect()->back()->with('success', 'Transaksi berhasil disimpan dan jurnal dibuat.');
     }
 }

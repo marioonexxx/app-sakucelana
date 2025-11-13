@@ -176,8 +176,57 @@
                                     </svg><span>Dashboard</span>
                                 </a>
                             </li>
+                            
                             <li class="sidebar-list"><i class="fa-solid fa-thumbtack"></i>
-                                <a class="sidebar-link sidebar-title link-nav" href="{{ route('koderekening.index') }}">
+                                <a class="sidebar-link sidebar-title link-nav" href="{{ route('jurnal-umum.index') }}">
+                                    <svg class="stroke-icon">
+                                        <use href="{{ asset('cuba/assets/svg/icon-sprite.svg#stroke-to-do') }}">
+                                        </use>
+                                    </svg>
+                                    <svg class="fill-icon">
+                                        <use href="{{ asset('cuba/assets/svg/icon-sprite.svg#fill-to-do') }}">
+                                        </use>
+                                    </svg><span>Jurnal Umum</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-list"><i class="fa-solid fa-thumbtack"></i>
+                                <a class="sidebar-link sidebar-title link-nav" href="{{ route('buku-besar.index') }}">
+                                    <svg class="stroke-icon">
+                                        <use href="{{ asset('cuba/assets/svg/icon-sprite.svg#stroke-to-do') }}">
+                                        </use>
+                                    </svg>
+                                    <svg class="fill-icon">
+                                        <use href="{{ asset('cuba/assets/svg/icon-sprite.svg#fill-to-do') }}">
+                                        </use>
+                                    </svg><span>Buku Besar</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-list"><i class="fa-solid fa-thumbtack"></i>
+                                <a class="sidebar-link sidebar-title link-nav" href="{{ route('neraca-saldo.index') }}">
+                                    <svg class="stroke-icon">
+                                        <use href="{{ asset('cuba/assets/svg/icon-sprite.svg#stroke-to-do') }}">
+                                        </use>
+                                    </svg>
+                                    <svg class="fill-icon">
+                                        <use href="{{ asset('cuba/assets/svg/icon-sprite.svg#fill-to-do') }}">
+                                        </use>
+                                    </svg><span>Neraca Saldo</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-list"><i class="fa-solid fa-thumbtack"></i>
+                                <a class="sidebar-link sidebar-title link-nav" href="{{ route('laporan-labarugi.index') }}">
+                                    <svg class="stroke-icon">
+                                        <use href="{{ asset('cuba/assets/svg/icon-sprite.svg#stroke-to-do') }}">
+                                        </use>
+                                    </svg>
+                                    <svg class="fill-icon">
+                                        <use href="{{ asset('cuba/assets/svg/icon-sprite.svg#fill-to-do') }}">
+                                        </use>
+                                    </svg><span>Laporan Laba/Rugi</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-list"><i class="fa-solid fa-thumbtack"></i>
+                                <a class="sidebar-link sidebar-title link-nav" href="{{ route('coa.index') }}">
                                     <svg class="stroke-icon">
                                         <use href="{{ asset('cuba/assets/svg/icon-sprite.svg#stroke-to-do') }}">
                                         </use>

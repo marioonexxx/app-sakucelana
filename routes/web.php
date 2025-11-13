@@ -1,10 +1,15 @@
 <?php
 
+use App\Http\Controllers\BukuBesarController;
+use App\Http\Controllers\JurnalUmumController;
+use App\Http\Controllers\LabaRugiController;
 use App\Http\Controllers\ManageBiayaOperasionalController;
+use App\Http\Controllers\ManageCoaController;
 use App\Http\Controllers\ManageKasirController;
 use App\Http\Controllers\ManageKodeRekeningController;
 use App\Http\Controllers\ManageProdukController;
 use App\Http\Controllers\ManageTransaksiController;
+use App\Http\Controllers\NeracaSaldoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserAdministratorController;
 use App\Http\Controllers\UserInventarisController;
@@ -23,7 +28,11 @@ Route::get('/dashboard', function () {
 
 Route::middleware('auth','Keuangan','verified')->group(function(){
     Route::get('keuangan/dashboard',[UserKeuanganController::class, 'index'])->name('keuangan.dashboard');
-    Route::resource('koderekening', ManageKodeRekeningController::class);
+    Route::resource('coa', ManageCoaController::class);
+    Route::resource('jurnal-umum', JurnalUmumController::class);
+    Route::resource('buku-besar', BukuBesarController::class);
+    Route::resource('neraca-saldo', NeracaSaldoController::class);
+    route::resource('laporan-labarugi', LabaRugiController::class);
     Route::resource('biaya-operasional', ManageBiayaOperasionalController::class);
     Route::get('/user-keuangan',[UserKeuanganController::class, 'showprofil'])->name('keuangan.showprofil');
     Route::put('/user-keuangan/{id}',[UserKeuanganController::class, 'update'])->name('keuangan.updateprofil');
